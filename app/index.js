@@ -1,7 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
-const { HttpError, NotFoundError } = require('./errors');
+const router = require('./router');
+const { notFoundHandler, errorHandler } = require('./handlers');
 
 const app = express();
 
@@ -15,27 +16,9 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-/**
- * Not found handler
- */
+app.use(router);
 
-app.use((req, res) => {
-  throw new NotFoundError(
-    `The requested resource at '${req.originalUrl}' was not found.`,
-  );
-});
-
-/**
- * Error handler
- */
-
-app.use((error, req, res, next) => {
-  const statusCode = error instanceof HttpError ? error.statusCode : 500;
-  const message = error.message;
-
-  res.status(statusCode).json({
-    message,
-  });
-});
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 module.exports = app;

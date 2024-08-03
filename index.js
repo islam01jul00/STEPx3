@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+const mongoose = require('mongoose');
 const http = require('http');
 const app = require('./app');
 
@@ -23,6 +24,10 @@ const normalizePort = (val) => {
   return false;
 };
 
+const PORT = normalizePort(process.env.PORT);
+
+app.set('port', PORT);
+
 /**
  * Event listener for HTTP server "error" event.
  */
@@ -32,7 +37,7 @@ const onError = (error) => {
     throw error;
   }
 
-  const bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
+  const bind = typeof PORT === 'string' ? 'Pipe ' + PORT : 'Port ' + PORT;
 
   switch (error.code) {
     case 'EACCES':
@@ -59,12 +64,21 @@ const onListening = () => {
   console.log('Listening on ' + bind);
 };
 
-const port = normalizePort(process.env.PORT || '8000');
-
-app.set('port', port);
-
 const server = http.createServer(app);
 
-server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+
+(async () => {
+  try {
+    const MONGO_URI = process.env.MONGO_URI;
+
+    await mongoose.connect(MONGO_URI);
+    console.log('Connected to MongoDB');
+
+    server.listen(PORT);
+  } catch (error) {
+    console.error(error);
+    process.exit(1);
+  }
+})();
