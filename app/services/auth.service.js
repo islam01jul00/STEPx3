@@ -10,7 +10,7 @@ const signUp = async (firstName, lastName, email, password) => {
   const currentUser = await User.findOne({ email });
 
   if (currentUser) {
-    throw new ConflictError('This email address is already in use.');
+    throw new ConflictError('The email address is already in use.');
   }
 
   const hash = bcrypt.hashSync(password, bcrypt.genSaltSync());
