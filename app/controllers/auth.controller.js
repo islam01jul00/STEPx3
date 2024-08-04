@@ -13,4 +13,16 @@ const signUp = catchAsync(async (req, res) => {
   });
 });
 
-module.exports = { signUp };
+const signIn = catchAsync(async (req, res) => {
+  const { email, password } = req.body;
+
+  const token = await authService.signIn(email, password);
+
+  res.status(200).json({
+    data: {
+      token,
+    },
+  });
+});
+
+module.exports = { signUp, signIn };

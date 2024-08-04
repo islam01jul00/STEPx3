@@ -133,6 +133,122 @@
           }
         }
       }
+    },
+    "/api/v1/auth/sign-in": {
+      "post": {
+        "summary": "Signs in a user.",
+        "tags": ["Auth"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": ["email", "password"]
+              },
+              "example": {
+                "email": "islam@example.com",
+                "password": "secret123"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User signed in successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string",
+                          "format": "jwt"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "data": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YWZjNmM2ZWE5NTU0YmM1YTQ5YmIzNSIsImlhdCI6MTcyMjc5NTcxOCwiZXhwIjoxNzIyODgyMTE4fQ.Gv2l7XBBrlZQqKnnBSEWic0LuVALIJY9eNy3qxnMHOo"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request body contains invalid data.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          },
+                          "path": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "message": "The request body contains invalid data.",
+                  "details": [
+                    {
+                      "message": "\"email\" is not allowed to be empty",
+                      "path": ["email"]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid email or password.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Invalid email or password."
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
