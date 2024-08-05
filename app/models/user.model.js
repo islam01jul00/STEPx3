@@ -15,9 +15,25 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    hash: {
+    passwordHash: {
       type: String,
       required: true,
+    },
+    passwordResetOTP: {
+      type: String,
+      default: null,
+    },
+    passwordResetOTPExpires: {
+      type: Date,
+      default: null,
+    },
+    passwordResetToken: {
+      type: String,
+      default: null,
+    },
+    passwordResetTokenExpires: {
+      type: Date,
+      default: null,
     },
     profileImage: {
       type: String,
